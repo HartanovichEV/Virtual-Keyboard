@@ -10,15 +10,13 @@ document.body.appendChild(wrapper);
 wrapper.appendChild(title);
 wrapper.appendChild(info);
 wrapper.appendChild(textarea);
-//wrapper.appendChild(keyboardElem);
-
 
 wrapper.classList.add("wrapper");
 textarea.classList.add("use-keyboard-input");
 textarea.setAttribute("rows", "1");
 textarea.setAttribute("placeholder", "Well, click me and write something good....");
 title.textContent = "Virtual Keyboard";
-info.innerText = "The virtual keyboard was created in Windows OS\nPush Ctrl + Alt for changing language";
+info.innerText = "The virtual keyboard was created in Windows OS\nPush Ctrl + Alt for try ";
 
 /* Textarea авто расширение*/
 textarea.addEventListener("keydown", autosize);
