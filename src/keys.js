@@ -325,8 +325,8 @@ export default [
     },
     {
     code: "ShiftRight",
-    contents: { en: "Shift ", ru: "Shift " },
-    shift: { en: "Shift ", ru: "Shift " },
+    contents: { en: "Shift", ru: "Shift" },
+    shift: { en: "Shift", ru: "Shift" },
     character: { en: "func", ru: "func" },
     },
     {
@@ -335,6 +335,12 @@ export default [
     shift: { en: "Ctrl", ru: "Ctrl" },
     character: { en: "func", ru: "func" },
     },
+    {
+        code: "Win",
+        contents: { en: "Win", ru: "Win" },
+        shift: { en: "Win", ru: "Win" },
+        character: { en: "func", ru: "func" },
+        },
     {
     code: "AltLeft",
     contents: { en: "Alt", ru: "Alt" },

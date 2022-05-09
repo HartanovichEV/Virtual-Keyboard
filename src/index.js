@@ -28,7 +28,7 @@ function autosize(){
     el.style.cssText =" height:" + (el.scrollHeight + 20) + "px";
 }
 /*__________________________*/
-
+let languageEn = true;
 const Keyboard = {
     elements: {
         main: null,
@@ -44,9 +44,9 @@ const Keyboard = {
     properties: {
         value: "",
         capsLock: false
-    },
-
+    },    
     init() {
+        
         // Create main elements
         this.elements.main = document.createElement("div");
         this.elements.keysContainer = document.createElement("div");
@@ -74,32 +74,119 @@ const Keyboard = {
 
     _createKeys() {
         const fragment = document.createDocumentFragment();
+        
         const keyLayout = [];
-        // Creates keyLayout in contents.en
         (function () {
             KEYS.forEach((key) => {
-                keyLayout.push(key.contents.en);
+                if(languageEn) keyLayout.push(key.contents.en);
+                else keyLayout.push(key.contents.ru);
             });            
         }());
-
+        
         keyLayout.forEach((key, ind) => {
             const codeLayout = [];
             (function () {
                 KEYS.forEach((key) => {
-                    codeLayout.push(key.code);
+                    if(languageEn) codeLayout.push(key.code);
                 });            
             }());
             const keyElement = document.createElement("button");
-            keyElement.setAttribute('id', codeLayout[ind]);
+            keyElement.setAttribute("id", codeLayout[ind]);
             // Add attributes/classes 
             keyElement.setAttribute("type", "button");
-
             keyElement.classList.add("keyboard__key");
-            keyElement.textContent = key;
-            keyElement.addEventListener("click", () => {
-                this.properties.value += this.properties.capsLock ? key.toUpperCase() : key.toLowerCase();
-                this._triggerEvent("oninput");
-            });
+            switch (key) {
+                case "Backspace":
+                    keyElement.classList.add("keyboard__key--wide");
+                    keyElement.textContent = key;
+                    keyElement.addEventListener("click", () => {
+                        this.properties.value = this.properties.value.substring(0, this.properties.value.length - 1);
+                        this._triggerEvent("oninput");
+                    });
+
+                    break;
+
+                case "CapsLock":
+                    keyElement.classList.add("keyboard__key--wide");
+                    keyElement.textContent = key;
+
+                    break;
+                case "Shift":
+                    keyElement.classList.add("keyboard__key--wide");
+                    keyElement.textContent = key;
+
+                    break;        
+                    
+                case "Enter":
+                    keyElement.classList.add("keyboard__key--wide");
+                    keyElement.textContent = key;
+                    keyElement.addEventListener("click", () => {
+                        this.properties.value += "\n";
+                        this._triggerEvent("oninput");
+                    });
+
+                    break;
+
+                case " ":
+                    keyElement.classList.add("keyboard__key--extra-wide");
+                    
+                    keyElement.addEventListener("click", () => {
+                        this.properties.value += " ";
+                        this._triggerEvent("oninput");
+                    });
+
+                    break;
+                case "Tab":
+                    keyElement.textContent = key;
+                    keyElement.addEventListener("click", () => {
+                        this.properties.value += "    ";
+                        this._triggerEvent("oninput");
+                    });
+
+                    break;
+                case "Del":
+                    keyElement.textContent = key;
+                    keyElement.addEventListener("click", () => {
+                        this.properties.value = this.properties.value.substring(0, this.properties.value.length - 1);
+                        this._triggerEvent("oninput");
+                    });
+
+                    break;
+                case "Ctrl":
+                    keyElement.textContent = key;
+                    keyElement.addEventListener("click", () => {
+                        this.properties.value += "";
+                        this._triggerEvent("oninput");
+                    });
+
+                    break;
+                case "Win":
+                    keyElement.textContent = key;
+                    keyElement.addEventListener("click", () => {
+                        this.properties.value += "";
+                        this._triggerEvent("oninput");
+                    });
+
+                    break;  
+                case "Alt":
+                    keyElement.textContent = key;
+                    keyElement.addEventListener("click", () => {
+                        this.properties.value += "";
+                        this._triggerEvent("oninput");
+                    });
+
+                    break;  
+
+                default:
+                    keyElement.textContent = key;
+
+                    keyElement.addEventListener("click", () => {
+                        this.properties.value += this.properties.capsLock ? key.toUpperCase() : key.toLowerCase();
+                        this._triggerEvent("oninput");
+                    });
+
+                    break;
+            }
 
             fragment.appendChild(keyElement);
 
@@ -142,31 +229,45 @@ const Keyboard = {
         let cursorStart = textarea.selectionStart;
         let cursorEnd = textarea.selectionEnd;
         if (textarea.selectionStart === textarea.selectionEnd) {
-            if (textBtn === 'Delete') cursorEnd += 1;
-            else if (textBtn === 'Backspace') cursorStart = Math.max(0, cursorStart - 1);
+            if (textBtn === "Delete") cursorEnd += 1;
+            else if (textBtn === "Backspace") cursorStart = Math.max(0, cursorStart - 1);
         }
     
-        if (textBtn === 'Delete' || textBtn === 'Backspace') {
-            textarea.setRangeText('', cursorStart, cursorEnd);
+        if (textBtn === "Delete" || textBtn === "Backspace") {
+            textarea.setRangeText("", cursorStart, cursorEnd);
         } else textarea.setRangeText(text);
         textarea.selectionStart = cursorStart + text.length;
         textarea.selectionEnd = textarea.selectionStart;
     },
 
     addListeners() {
-        document.addEventListener('keydown', (keyEvent) => {            
+        document.addEventListener("keydown", (keyEvent) => {            
             const key = document.getElementById(keyEvent.code);
             if (key) {
-                key.classList.add('pressed');
+                key.classList.add("pressed");
                 keyEvent.preventDefault();
-                this.insertText(key.textContent)
-                //console.log(key.textContent)
+                if(keyEvent.ctrlKey && keyEvent.altKey){
+                    
+                    languageEn == true? languageEn = false: languageEn = true;
+                    this.elements.main.innerHTML = "";
+                    this.init();
+                }
+                else if (keyEvent.code === "Backspace") this.insertText("", "Backspace");
+                else if (keyEvent.code === "Delete") this.insertText("", "Delete");
+                else if (keyEvent.code === "Enter") this.insertText("\n");
+                else if (keyEvent.code === "Tab") this.insertText("    ");
+                else if (keyEvent.code === "ControlRight" || keyEvent.code === "ControlLeft") this.insertText("");
+                else if (keyEvent.code === "Win" || keyEvent.code === "CapsLock") this.insertText("");
+                else if (keyEvent.code === "AltLeft" || keyEvent.code === "AltRight") this.insertText("");
+                else if (keyEvent.code === "ShiftLeft" || keyEvent.code === "ShiftRight") this.insertText("");
+                else{ this.insertText(key.textContent);}
+                
             }
         });
-        document.addEventListener('keyup', (keyEvent) => {
+        document.addEventListener("keyup", (keyEvent) => {
             const key = document.getElementById(keyEvent.code);
             if (key) {
-                key.classList.remove('pressed');
+                key.classList.remove("pressed");
             }
         });
     }
