@@ -121,19 +121,15 @@ p {
     transition: opacity .3s ease-in-out;
     border-radius: 10px;
 }
-
 .keyboard__key:active{
     color: #000
 }
-
 .keyboard__key:active:after{
     background: transparent;
 }
-
 .keyboard__key:hover:before{
     opacity: 1;
 }
-
 .keyboard__key:after{
     z-index: -1;
     content: '';
@@ -145,18 +141,15 @@ p {
     top: 0;
     border-radius: 10px;
 }
-
 @keyframes glowing {
     0% { background-position: 0 0; }
     50% { background-position: 400% 0; }
     100% { background-position: 0 0; }
 }
-
 .keyboard__key--wide {
     font-weight: 500;
     width: 100px;
 }
-
 .keyboard__key--extra-wide {
     width: 330px;
 }
