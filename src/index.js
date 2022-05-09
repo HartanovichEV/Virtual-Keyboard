@@ -1,3 +1,5 @@
+import KEYS from "./keys.js";
+
 const wrapper = document.createElement("div");
 const title = document.createElement("h1");
 const textarea = document.createElement("textarea");
@@ -15,7 +17,7 @@ wrapper.classList.add("wrapper");
 textarea.classList.add("use-keyboard-input");
 textarea.setAttribute("rows", "1");
 textarea.setAttribute("placeholder", "Well, click me and write something good....");
-title.textContent = "RSS Virtual Keyboard";
+title.textContent = "Virtual Keyboard";
 info.innerText = "The virtual keyboard was created in Windows OS\nPush Ctrl + Alt for changing language";
 
 /* Textarea авто расширение*/
@@ -26,7 +28,6 @@ function autosize(){
     el.style.cssText =" height:" + (el.scrollHeight + 20) + "px";
 }
 /*__________________________*/
-
 
 const Keyboard = {
     elements: {
@@ -73,12 +74,13 @@ const Keyboard = {
 
     _createKeys() {
         const fragment = document.createDocumentFragment();
-        const keyLayout = [
-            "1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "backspace",
-            "q", "w", "e", "r", "t", "z", "u", "i", "o", "p", "-",
-            "a", "s", "d", "f", "g", "h", "j", "k", "l",
-            "y", "x", "c", "v", "b", "n", "m", "done"
-        ];
+        const keyLayout = [];
+        // Creates keyLayout in contents.en
+        (function () {
+            KEYS.forEach((key) => {
+                keyLayout.push(key.contents.en);
+            });            
+        }());
 
         // Creates HTML for an icon
         const createIconHTML = (icon_name) => {
@@ -87,14 +89,14 @@ const Keyboard = {
 
         keyLayout.forEach(key => {
             const keyElement = document.createElement("button");
-            const insertLineBreak = ["backspace", "-", "l"].indexOf(key) !== -1;
+            const insertLineBreak = ["Backspace", "Del", "Enter", "Shift "].indexOf(key) !== -1;
 
-            // Add attributes/classes
+            // Add attributes/classes 
             keyElement.setAttribute("type", "button");
             keyElement.classList.add("keyboard__key");
 
             switch (key) {
-                case "backspace":
+                case "Backspace":
                     keyElement.classList.add("keyboard__key--wide");
                     keyElement.innerHTML = createIconHTML("backspace");
 
@@ -103,6 +105,13 @@ const Keyboard = {
                         this._triggerEvent("oninput");
                     });
 
+                    break;
+
+                case "Shift ":
+                    keyElement.classList.add("keyboard__key--wide");
+                    break;
+                case "Shift":
+                    keyElement.classList.add("keyboard__key--wide");
                     break;
 
                 case "caps":
@@ -116,7 +125,7 @@ const Keyboard = {
 
                     break;
 
-                case "enter":
+                case "Enter":
                     keyElement.classList.add("keyboard__key--wide");
                     keyElement.innerHTML = createIconHTML("keyboard_return");
 
