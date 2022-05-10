@@ -247,11 +247,9 @@ const Keyboard = {
                 if(keyEvent.ctrlKey && keyEvent.altKey){
                     
                     languageEn == true? languageEn = false: languageEn = true;
-                    this.elements.main.innerHTML = "";
-                    this.elements.keysContainer = document.createElement("div");
-                    this.elements.keysContainer.classList.add("keyboard__keys");
+                    this.elements.keysContainer.innerHTML = "";
                     this.elements.keysContainer.appendChild(this._createKeys());
-                    this.elements.main.appendChild(this.elements.keysContainer);
+
                 }
                 else if (keyEvent.code === "Backspace") this.insertText("", "Backspace");
                 else if (keyEvent.code === "Delete") this.insertText("", "Delete");
