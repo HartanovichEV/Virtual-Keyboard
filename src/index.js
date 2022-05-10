@@ -16,7 +16,7 @@ textarea.classList.add("use-keyboard-input");
 textarea.setAttribute("rows", "1");
 textarea.setAttribute("placeholder", "Well, click me and write something good....");
 title.textContent = "Virtual Keyboard";
-info.innerText = "The virtual keyboard was created in Windows OS\nPush Ctrl + Alt for try ";
+info.innerText = "The virtual keyboard was created in Windows OS\nPush Ctrl + Alt to change the language ";
 
 /* Textarea авто расширение*/
 textarea.addEventListener("keydown", autosize);
@@ -85,7 +85,7 @@ const Keyboard = {
             const codeLayout = [];
             (function () {
                 KEYS.forEach((key) => {
-                    if(languageEn) codeLayout.push(key.code);
+                    codeLayout.push(key.code);
                 });            
             }());
             const keyElement = document.createElement("button");
@@ -247,8 +247,9 @@ const Keyboard = {
                 if(keyEvent.ctrlKey && keyEvent.altKey){
                     
                     languageEn == true? languageEn = false: languageEn = true;
-                    this.elements.main.innerHTML = "";
-                    this.init();
+                    this.elements.keysContainer.innerHTML = "";
+                    this.elements.keysContainer.appendChild(this._createKeys());
+
                 }
                 else if (keyEvent.code === "Backspace") this.insertText("", "Backspace");
                 else if (keyEvent.code === "Delete") this.insertText("", "Delete");
