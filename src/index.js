@@ -26,7 +26,8 @@ function autosize(){
     el.style.cssText =" height:" + (el.scrollHeight + 20) + "px";
 }
 /*__________________________*/
-let languageEn = true;
+
+
 const Keyboard = {
     elements: {
         main: null,
@@ -41,7 +42,8 @@ const Keyboard = {
 
     properties: {
         value: "",
-        capsLock: false
+        capsLock: false,
+        languageEn: localStorage.getItem("languageEnLocSt") === "false" ? false : true,
     },    
     init() {
         
@@ -72,15 +74,10 @@ const Keyboard = {
 
     _createKeys() {
         const fragment = document.createDocumentFragment();
-        
-        const keyLayout = [];
-        (function () {
-            KEYS.forEach((key) => {
-                if(languageEn) keyLayout.push(key.contents.en);
-                else keyLayout.push(key.contents.ru);
-            });            
-        }());
-        
+        const keyLayout = [];        
+        KEYS.forEach((key) => {
+            this.properties.languageEn == true? keyLayout.push(key.contents.en): keyLayout.push(key.contents.ru);
+        });           
         keyLayout.forEach((key, ind) => {
             const codeLayout = [];
             (function () {
@@ -98,10 +95,8 @@ const Keyboard = {
                     keyElement.classList.add("keyboard__key--wide");
                     keyElement.textContent = key;
                     keyElement.addEventListener("click", () => {
-                        this.properties.value = this.properties.value.substring(0, this.properties.value.length - 1);
-                        this._triggerEvent("oninput");
+                        this.insertText("", "Backspace");
                     });
-
                     break;
 
                 case "CapsLock":
@@ -121,6 +116,7 @@ const Keyboard = {
                     keyElement.addEventListener("click", () => {
                         this.properties.value += "\n";
                         this._triggerEvent("oninput");
+                        autosize();
                     });
 
                     break;
@@ -131,6 +127,7 @@ const Keyboard = {
                     keyElement.addEventListener("click", () => {
                         this.properties.value += " ";
                         this._triggerEvent("oninput");
+                        autosize();
                     });
 
                     break;
@@ -139,14 +136,14 @@ const Keyboard = {
                     keyElement.addEventListener("click", () => {
                         this.properties.value += "    ";
                         this._triggerEvent("oninput");
+                        autosize();
                     });
 
                     break;
                 case "Del":
                     keyElement.textContent = key;
                     keyElement.addEventListener("click", () => {
-                        this.properties.value = this.properties.value.substring(0, this.properties.value.length - 1);
-                        this._triggerEvent("oninput");
+                        this.insertText("", "Delete");
                     });
 
                     break;
@@ -181,6 +178,7 @@ const Keyboard = {
                     keyElement.addEventListener("click", () => {
                         this.properties.value += this.properties.capsLock ? key.toUpperCase() : key.toLowerCase();
                         this._triggerEvent("oninput");
+                        autosize();
                     });
 
                     break;
@@ -245,11 +243,12 @@ const Keyboard = {
                 key.classList.add("pressed");
                 keyEvent.preventDefault();
                 if(keyEvent.ctrlKey && keyEvent.altKey){
-                    
-                    languageEn == true? languageEn = false: languageEn = true;
+                    this.properties.languageEn = this.properties.languageEn == true ? false: true;
+
+                        localStorage.setItem("languageEnLocSt", this.properties.languageEn);
+
                     this.elements.keysContainer.innerHTML = "";
                     this.elements.keysContainer.appendChild(this._createKeys());
-
                 }
                 else if (keyEvent.code === "Backspace") this.insertText("", "Backspace");
                 else if (keyEvent.code === "Delete") this.insertText("", "Delete");
@@ -276,3 +275,4 @@ window.addEventListener("DOMContentLoaded", function () {
     Keyboard.init();
     Keyboard.addListeners();
 });
+textarea.onblur = () => textarea.focus();
