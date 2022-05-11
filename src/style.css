@@ -169,11 +169,3 @@ p {
     transition: opacity .3s ease-in-out;
     border-radius: 10px;    
 }
-.circle{
-    margin-left: 5px;
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-    background-color: #C711A4;
-}
-
