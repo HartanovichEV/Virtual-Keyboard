@@ -21,8 +21,8 @@ info.innerText = "The virtual keyboard was created in Windows OS\nPush Ctrl + Al
 /* Textarea авто расширение*/
 textarea.addEventListener("keydown", autosize);
 function autosize(){
-    let el = this;
-    el.style.cssText = "height:auto;";
+    let el = textarea;
+    el.style.cssText = "height: auto;";
     el.style.cssText =" height:" + (el.scrollHeight + 20) + "px";
 }
 /*__________________________*/
@@ -204,16 +204,6 @@ const Keyboard = {
         }
     },
 
-    _toggleCapsLock() {
-        this.properties.capsLock = !this.properties.capsLock;
-
-        for (const key of this.elements.keys) {
-            if (key.childElementCount === 0) {
-                key.textContent = this.properties.capsLock ? key.textContent.toUpperCase() : key.textContent.toLowerCase();
-            }
-        }
-    },
-
     open(initialValue, oninput, onclose) {
         this.properties.value = initialValue || "";
         this.eventHandlers.oninput = oninput;
@@ -238,8 +228,6 @@ const Keyboard = {
     
         if (textBtn === "Delete" || textBtn === "Backspace") {
             textarea.setRangeText("", cursorStart, cursorEnd);
-        } else if (textBtn === "Delete" || textBtn === "Backspace") {
-            textarea.setRangeText("", cursorStart, cursorEnd);
         } 
         else textarea.setRangeText(text);
         textarea.selectionStart = cursorStart + text.length;
@@ -248,7 +236,6 @@ const Keyboard = {
 
     addListeners() {
         document.addEventListener("keydown", (keyEvent) => {  
-            console.log (keyEvent) ;         
             const key = document.getElementById(keyEvent.code);
             if (key) {
                 key.classList.add("pressed");
