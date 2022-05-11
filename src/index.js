@@ -27,7 +27,6 @@ function autosize(){
 }
 /*__________________________*/
 
-
 const Keyboard = {
     elements: {
         main: null,
@@ -43,6 +42,7 @@ const Keyboard = {
     properties: {
         value: "",
         capsLock: false,
+        capsLockPush: false,
         languageEn: localStorage.getItem("languageEnLocSt") === "false" ? false : true,
     },    
     init() {
@@ -57,7 +57,7 @@ const Keyboard = {
         this.elements.keysContainer.appendChild(this._createKeys());
 
         this.elements.keys = this.elements.keysContainer.querySelectorAll(".keyboard__key");
-
+        
         // Add to DOM
         this.elements.main.appendChild(this.elements.keysContainer);
         document.body.appendChild(this.elements.main);
@@ -74,9 +74,13 @@ const Keyboard = {
 
     _createKeys() {
         const fragment = document.createDocumentFragment();
+        
         const keyLayout = [];        
         KEYS.forEach((key) => {
-            this.properties.languageEn == true? keyLayout.push(key.contents.en): keyLayout.push(key.contents.ru);
+            this.properties.languageEn == true && this.properties.capsLockPush == false? keyLayout.push(key.contents.en):
+            this.properties.languageEn == false && this.properties.capsLockPush == false? keyLayout.push(key.contents.ru):
+            this.properties.languageEn == true && this.properties.capsLockPush == true? keyLayout.push(key.shift.en):
+            keyLayout.push(key.shift.ru);
         });           
         keyLayout.forEach((key, ind) => {
             const codeLayout = [];
@@ -101,6 +105,11 @@ const Keyboard = {
 
                 case "CapsLock":
                     keyElement.classList.add("keyboard__key--wide");
+                    keyElement.addEventListener("click", () => {
+                        this.properties.capsLockPush = this.properties.capsLockPush == true ? false: true;
+                        this.elements.keysContainer.innerHTML = "";
+                        this.elements.keysContainer.appendChild(this._createKeys());
+                    });
                     keyElement.textContent = key;
 
                     break;
@@ -123,7 +132,6 @@ const Keyboard = {
 
                 case " ":
                     keyElement.classList.add("keyboard__key--extra-wide");
-                    
                     keyElement.addEventListener("click", () => {
                         this.properties.value += " ";
                         this._triggerEvent("oninput");
@@ -174,9 +182,8 @@ const Keyboard = {
 
                 default:
                     keyElement.textContent = key;
-
                     keyElement.addEventListener("click", () => {
-                        this.properties.value += this.properties.capsLock ? key.toUpperCase() : key.toLowerCase();
+                        this.properties.value += this.properties.capsLockPush == true ? key.toUpperCase() : key.toLowerCase();
                         this._triggerEvent("oninput");
                         autosize();
                     });
@@ -231,31 +238,44 @@ const Keyboard = {
     
         if (textBtn === "Delete" || textBtn === "Backspace") {
             textarea.setRangeText("", cursorStart, cursorEnd);
-        } else textarea.setRangeText(text);
+        } else if (textBtn === "Delete" || textBtn === "Backspace") {
+            textarea.setRangeText("", cursorStart, cursorEnd);
+        } 
+        else textarea.setRangeText(text);
         textarea.selectionStart = cursorStart + text.length;
         textarea.selectionEnd = textarea.selectionStart;
     },
 
     addListeners() {
-        document.addEventListener("keydown", (keyEvent) => {            
+        document.addEventListener("keydown", (keyEvent) => {  
+            console.log (keyEvent) ;         
             const key = document.getElementById(keyEvent.code);
             if (key) {
                 key.classList.add("pressed");
                 keyEvent.preventDefault();
                 if(keyEvent.ctrlKey && keyEvent.altKey){
+                    setTimeout(() => {
                     this.properties.languageEn = this.properties.languageEn == true ? false: true;
 
                         localStorage.setItem("languageEnLocSt", this.properties.languageEn);
 
                     this.elements.keysContainer.innerHTML = "";
                     this.elements.keysContainer.appendChild(this._createKeys());
+                    }, 500);
+                }
+                else if (keyEvent.code === "CapsLock"){
+                    this.properties.capsLockPush = this.properties.capsLockPush == true ? false: true;
+                    this.elements.keysContainer.innerHTML = "";
+                    this.elements.keysContainer.appendChild(this._createKeys());
+                
                 }
                 else if (keyEvent.code === "Backspace") this.insertText("", "Backspace");
                 else if (keyEvent.code === "Delete") this.insertText("", "Delete");
                 else if (keyEvent.code === "Enter") this.insertText("\n");
                 else if (keyEvent.code === "Tab") this.insertText("    ");
                 else if (keyEvent.code === "ControlRight" || keyEvent.code === "ControlLeft") this.insertText("");
-                else if (keyEvent.code === "Win" || keyEvent.code === "CapsLock") this.insertText("");
+                else if (keyEvent.code === "Win") this.insertText("");
+                else if (keyEvent.code === "Space") this.insertText(" ");
                 else if (keyEvent.code === "AltLeft" || keyEvent.code === "AltRight") this.insertText("");
                 else if (keyEvent.code === "ShiftLeft" || keyEvent.code === "ShiftRight") this.insertText("");
                 else{ this.insertText(key.textContent);}
