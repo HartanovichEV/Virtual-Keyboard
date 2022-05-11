@@ -38,6 +38,7 @@ body {
     font-size: calc(20px + (35 - 20) * ((100vw - 320px) / (1200 - 320)));
 }
 p {
+    margin: 0.3em 0;
     color: #7F7F80;
     font-weight: 400;  
     font-size: calc(15px + (20 - 15) * ((100vw - 320px) / (1200 - 320)));
@@ -66,7 +67,7 @@ p {
 
 .keyboard {
     position: fixed;
-    left: calc((100vw - 820px)/2);
+    left: calc((100vw - 870px)/2);
     bottom: 5vh;    
     max-width: 870px;
     padding: 5px 0;
@@ -145,9 +146,9 @@ p {
     50% { background-position: 400% 0; }
     100% { background-position: 0 0; }
 }
-.keyboard__key--wide {
+.keyboard__key--wide{
     font-weight: 500;
-    width: 100px;
+    width: 105px;
 }
 .keyboard__key--extra-wide {
     width: 330px;
@@ -167,5 +168,12 @@ p {
     animation: glowing 20s linear infinite;
     transition: opacity .3s ease-in-out;
     border-radius: 10px;    
+}
+.circle{
+    margin-left: 5px;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background-color: #C711A4;
 }
 
